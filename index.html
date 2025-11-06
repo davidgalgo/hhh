@@ -1,0 +1,1648 @@
+
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadooria | A Forgotten World</title>
+    <meta name="description" content="Hadooria... a hidden realm where art, mysticism, and legend intertwine.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Playfair+Display:ital,wght@1,400..900&amp;display=swap" rel="stylesheet">
+
+    <!-- Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/lenis@1.3.13/dist/lenis.min.js"></script>
+    <style>
+      /* Base styles */
+      html {
+        width: 100%;
+        overflow-x: hidden;
+        /* Prevent horizontal flicker on the main container */
+        overflow-y: scroll;
+        /* <-- ADDED: Force vertical scrollbar to always be visible to prevent flicker */
+      }
+
+      body {
+        width: 100%;
+        /* Ensure body doesn't cause overflow */
+        font-family: 'Inter', sans-serif;
+        background-color: #0A0A0A;
+        color: #EAE8E3;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .hero-title,
+      .hero-subtitle {
+        font-family: 'Cormorant Garamond', serif;
+        font-weight: 500;
+      }
+
+      /* Serif Italic styles */
+      h1 em,
+      h2 em,
+      h3 em,
+      h4 em,
+      p em {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+      }
+
+      /* Split Screen Container */
+      .split-screen-section {
+        will-change: width, height;
+        /* Performance optimization for animations */
+      }
+
+      /* Fullscreen styles */
+      .split-screen-section.is-fullscreen .fullscreen-close-btn {
+        opacity: 1;
+        pointer-events: auto;
+        transition-delay: 0.5s;
+      }
+
+      /* Set initial state for animations */
+      .gsap-reveal,
+      .gsap-reveal-stagger>* {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      /* --- Artifacts Section Styles --- */
+      .artifacts-view {
+        --color-background: rgb(15, 15, 15);
+        --color-foreground: rgb(230, 225, 215);
+        --color-accent: rgb(200, 180, 160);
+        --font-primary: "Cormorant Garamond", serif;
+        --font-secondary: "Inter", sans-serif;
+        --noise-opacity: 0.15;
+        background: radial-gradient(circle at 10% 20%, var(--color-background) 0%, rgb(0, 0, 0) 90%);
+        color: var(--color-foreground);
+        letter-spacing: -0.03em;
+        font-size: 12px;
+        text-transform: uppercase;
+        position: relative;
+      }
+
+      .artifacts-view::before {
+        content: "";
+        position: absolute;
+        /* Changed to absolute to scroll with content */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent url("http://assets.iceable.com/img/noise-transparent.png") repeat 0 0;
+        background-size: 300px 300px;
+        animation: noise-animation 0.3s steps(5) infinite;
+        opacity: var(--noise-opacity);
+        will-change: transform, opacity;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      @keyframes noise-animation {
+        0% {
+          transform: translate(0, 0);
+        }
+
+        10% {
+          transform: translate(-2%, -3%);
+        }
+
+        20% {
+          transform: translate(-4%, 2%);
+        }
+
+        30% {
+          transform: translate(2%, -4%);
+        }
+
+        40% {
+          transform: translate(-2%, 5%);
+        }
+
+        50% {
+          transform: translate(-4%, 2%);
+        }
+
+        60% {
+          transform: translate(3%, 0);
+        }
+
+        70% {
+          transform: translate(0, 3%);
+        }
+
+        80% {
+          transform: translate(-3%, 0);
+        }
+
+        90% {
+          transform: translate(2%, 2%);
+        }
+
+        100% {
+          transform: translate(1%, 0);
+        }
+      }
+
+      .artifacts-view .container {
+        width: 100%;
+        padding: 2rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .chronicle-section .sessions-title h1,
+      .artifacts-view .sessions-title h1 {
+        font-family: 'Viaoda Libre', cursive;
+        font-size: clamp(2rem, 12vw, 10rem);
+        color: var(--color-foreground);
+        text-shadow: 0 0 15px rgba(230, 225, 215, 0.2);
+        letter-spacing: 0.2rem;
+        margin-bottom: 4rem;
+        padding-top: 4rem;
+      }
+
+      .artifacts-view .portfolio-grid {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 1rem;
+        position: relative;
+      }
+
+      .artifacts-view .grid-item {
+        position: relative;
+        margin-bottom: 20vh;
+      }
+
+      .artifacts-view .grid-item-01 {
+        grid-column: 1 / 3;
+      }
+
+      .artifacts-view .grid-item-03 {
+        grid-column: 5 / 7;
+      }
+
+      .artifacts-view .grid-item-05 {
+        grid-column: 11 / 13;
+      }
+
+      .artifacts-view .grid-item-06 {
+        grid-column: 1 / 3;
+      }
+
+      .artifacts-view .grid-item-09 {
+        grid-column: 7 / 12;
+      }
+
+      .artifacts-view .grid-item-11 {
+        grid-column: 1 / 3;
+      }
+
+      .artifacts-view .grid-item-13 {
+        grid-column: 5 / 7;
+      }
+
+      .artifacts-view .grid-item-17 {
+        grid-column: 1 / 3;
+      }
+
+      .artifacts-view .grid-item-20 {
+        grid-column: 9 / 12;
+        grid-row: 3 / 5;
+      }
+
+      .artifacts-view .image-box {
+        aspect-ratio: 4 / 5;
+        background: #000;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+      }
+
+      .artifacts-view .image-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: grayscale(100%) contrast(1.2);
+      }
+
+      .artifacts-view .threejs-canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .artifacts-view .image-number {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        font-size: 10px;
+        color: #fff;
+        z-index: 5;
+        font-family: var(--font-secondary);
+      }
+
+      .artifacts-view .image-title {
+        margin-top: 8px;
+        font-size: 14px;
+        color: var(--color-foreground);
+        transform: translateX(0px);
+        will-change: transform, color, text-shadow;
+        position: relative;
+        display: inline-block;
+        transition: color 0.2s cubic-bezier(0.23, 1, 0.32, 1), transform 0.2s cubic-bezier(0.23, 1, 0.32, 1), text-shadow 0.3s ease;
+        font-family: var(--font-primary);
+      }
+
+      .artifacts-view .image-title::before {
+        content: "•";
+        position: absolute;
+        left: -12px;
+        top: 0;
+        opacity: var(--before-opacity, 0);
+        transform: translateX(var(--before-x, -8px));
+        color: var(--color-accent);
+        transition: opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1), transform 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+
+      /* Locked Artifact Styles */
+      .artifacts-view .grid-item.is-locked .image-box {
+        cursor: not-allowed;
+      }
+
+      .artifacts-view .grid-item.is-locked .image-box img {
+        filter: grayscale(100%) contrast(1.2) blur(3px);
+        opacity: 0.4;
+      }
+
+      .artifacts-view .grid-item.is-locked .image-title {
+        opacity: 0.5;
+      }
+
+      .artifacts-view .grid-item.is-locked .lock-icon {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        pointer-events: none;
+      }
+
+      /* --- GSAP Scroll Story Section --- */
+      .scroll-story-container {
+        overflow: hidden;
+      }
+
+      .scroll-story-track {
+        display: flex;
+        width: 500vw;
+        /* 5 chapters * 100vw */
+      }
+
+      .scroll-story-chapter {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        padding: 5vw;
+      }
+
+      .story-element {
+        position: absolute;
+        opacity: 0;
+        /* Initially hidden for GSAP */
+      }
+
+      .story-headline {
+        font-family: 'Cinzel', serif;
+        font-weight: 700;
+        font-size: clamp(3rem, 10vw, 12rem);
+        line-height: 0.9;
+        color: #EAE8E3;
+        text-transform: uppercase;
+      }
+
+      .story-text {
+        max-width: 40ch;
+        font-family: 'Cormorant Garamond', serif;
+        font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+        line-height: 1.6;
+        color: #a0a0a0;
+      }
+
+      .story-text p {
+        margin-bottom: 1.5em;
+      }
+
+      .story-text p:last-child {
+        margin-bottom: 0;
+      }
+
+      .story-image-wrapper {
+        overflow: hidden;
+        border-radius: 0.75rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      .story-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .cta-button {
+        font-family: 'Cormorant Garamond', serif;
+        font-size: 1.25rem;
+        /* text-lg */
+        display: inline-block;
+        padding: 1rem 2.5rem;
+        /* py-4 px-10 */
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 9999px;
+        /* rounded-full */
+        color: #d4b886;
+        transition: all 0.3s ease;
+      }
+
+      .cta-button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 15px -3px rgba(212, 184, 134, 0.1), 0 4px 6px -4px rgba(212, 184, 134, 0.1);
+      }
+
+      .cta-button em {
+        font-family: 'Playfair Display', serif;
+        font-style: italic;
+      }
+
+      /* --- REDESIGNED Riddle Styles --- */
+      .riddle-overlay {
+        z-index: 100;
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 5, 5, 0.95);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        animation: fadeIn 0.6s ease forwards;
+      }
+
+      .riddle-overlay.active {
+        display: flex;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+
+        to {
+          opacity: 1;
+        }
+      }
+
+      .riddle-content {
+        /* Changed from centered box to split-screen layout */
+        display: flex;
+        max-width: 1100px;
+        width: 90%;
+        height: auto;
+        min-height: 600px;
+        padding: 5rem;
+        background: rgba(15, 15, 15, 0.85);
+        border: 1px solid rgba(212, 184, 134, 0.2);
+        border-radius: 12px;
+        /* Subtler radius */
+        box-shadow: 0 0 80px rgba(212, 184, 134, 0.1);
+        backdrop-filter: blur(12px);
+        animation: scaleUp 0.6s ease forwards;
+        text-align: left;
+        /* Changed from center */
+        position: relative;
+      }
+
+      @keyframes scaleUp {
+        from {
+          transform: scale(0.95);
+          opacity: 0;
+        }
+
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* Close button (Top Right 'X') */
+      .close-riddle-icon-btn {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        background: none;
+        border: none;
+        color: #999;
+        font-size: 3rem;
+        font-weight: 300;
+        line-height: 1;
+        cursor: pointer;
+        transition: color 0.3s ease, transform 0.3s ease;
+        font-family: var(--font-secondary);
+      }
+
+      .close-riddle-icon-btn:hover {
+        color: #fff;
+        transform: scale(1.1);
+      }
+
+      /* Split-screen containers */
+      .riddle-left {
+        flex: 1.2;
+        padding-right: 4rem;
+        border-right: 1px solid rgba(212, 184, 134, 0.2);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .riddle-right {
+        flex: 1;
+        padding-left: 4rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .riddle-content h2 {
+        font-size: 2.2rem;
+        /* Larger title */
+        letter-spacing: 1px;
+        color: #d4b886;
+        margin-bottom: 25px;
+        font-family: var(--font-primary);
+        font-weight: 700;
+        line-height: 1.3;
+      }
+
+      .riddle-text {
+        font-size: 1.3rem;
+        /* Larger riddle text */
+        line-height: 1.8;
+        margin-bottom: 25px;
+        color: #e7e3da;
+        font-family: var(--font-primary);
+        font-style: italic;
+        font-weight: 400;
+      }
+
+      .riddle-text>span {
+        display: block;
+        opacity: 0;
+      }
+
+      .riddle-content input {
+        width: 100%;
+        padding: 14px;
+        /* More padding */
+        border: none;
+        border-bottom: 1px solid #666;
+        background: transparent;
+        color: #fff;
+        font-size: 1.1rem;
+        /* Larger text */
+        outline: none;
+        text-align: left;
+        /* Changed from center */
+        transition: all 0.3s ease;
+        font-family: var(--font-secondary);
+      }
+
+      .riddle-content input::placeholder {
+        color: #777;
+      }
+
+      .riddle-content input:focus {
+        border-color: #d4b886;
+        box-shadow: 0 5px 15px rgba(212, 184, 134, 0.1);
+      }
+
+      .submit-btn {
+        margin-top: 25px;
+        padding: 16px 30px;
+        font-size: 1rem;
+        letter-spacing: 2px;
+        background: linear-gradient(135deg, #1f1f1f, #141414);
+        color: #d4b886;
+        border: 1px solid #3e3e3e;
+        border-radius: 40px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-family: var(--font-primary);
+        font-weight: 700;
+        width: 100%;
+        /* Full width */
+      }
+
+      .submit-btn:hover {
+        background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+        box-shadow: 0 0 25px rgba(212, 184, 134, 0.25);
+        transform: scale(1.02);
+      }
+
+      .feedback {
+        margin-top: 20px;
+        font-size: 0.95rem;
+        opacity: 0.8;
+        min-height: 24px;
+        transition: color 0.3s ease;
+        font-family: var(--font-secondary);
+        text-align: center;
+        /* Feedback remains centered */
+      }
+
+      .success {
+        color: #8fd896;
+      }
+
+      .failure {
+        color: #d88a8a;
+      }
+
+      .failure-shake {
+        animation: shake 0.4s ease;
+      }
+
+      @keyframes shake {
+
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+
+        25% {
+          transform: translateX(-6px);
+        }
+
+        50% {
+          transform: translateX(6px);
+        }
+
+        75% {
+          transform: translateX(-4px);
+        }
+      }
+
+      /* Text-based close button (for mobile) */
+      .close-riddle-text-btn {
+        margin-top: 20px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        color: #999;
+        transition: color 0.3s ease;
+        background: none;
+        border: none;
+        font-family: var(--font-secondary);
+        text-transform: uppercase;
+        display: none;
+        /* Hidden on desktop */
+        width: 100%;
+        text-align: center;
+      }
+
+      .close-riddle-text-btn:hover {
+        color: #fff;
+      }
+
+      /* Responsive Media Queries */
+      @media (max-width: 768px) {
+        .artifacts-view .container {
+          padding: 1rem;
+        }
+
+        .artifacts-view .portfolio-grid {
+          grid-template-columns: repeat(6, 1fr);
+        }
+
+        .artifacts-view .grid-item-01 {
+          grid-column: 1 / 3;
+        }
+
+        .artifacts-view .grid-item-03 {
+          grid-column: 3 / 5;
+        }
+
+        .artifacts-view .grid-item-05 {
+          grid-column: 5 / 7;
+        }
+
+        .artifacts-view .grid-item-06 {
+          grid-column: 1 / 3;
+        }
+
+        .artifacts-view .grid-item-09 {
+          grid-column: 3 / 7;
+        }
+
+        .artifacts-view .grid-item-11 {
+          grid-column: 1 / 3;
+        }
+
+        .artifacts-view .grid-item-13 {
+          grid-column: 3 / 5;
+        }
+
+        .artifacts-view .grid-item-17 {
+          grid-column: 5 / 7;
+        }
+
+        .artifacts-view .grid-item-20 {
+          grid-column: 1 / 4;
+          grid-row: span 1;
+        }
+
+        /* Vertical scroll for story on mobile */
+        .scroll-story-track {
+          flex-direction: column;
+          width: 100vw;
+          height: auto;
+        }
+
+        .scroll-story-chapter {
+          height: auto;
+          min-height: 100vh;
+          flex-direction: column;
+          justify-content: center;
+          padding: 15vh 5vw;
+          position: relative;
+        }
+
+        .story-element {
+          position: relative;
+          top: auto !important;
+          left: auto !important;
+          right: auto !important;
+          bottom: auto !important;
+          transform: none !important;
+          width: 100% !important;
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .story-headline {
+          font-size: 15vw;
+          margin-bottom: 1rem;
+        }
+
+        .story-text {
+          margin-left: auto;
+          margin-right: auto;
+          font-size: 1.25rem;
+        }
+
+        .story-image-wrapper {
+          height: 60vh !important;
+          margin-top: 2rem;
+        }
+      }
+
+      /* --- NEW Riddle Responsive Styles --- */
+      @media (max-width: 900px) {
+        .riddle-content {
+          flex-direction: column;
+          /* Stack vertically */
+          width: 90vw;
+          max-width: 500px;
+          /* Revert to modal-like max-width */
+          min-height: 0;
+          padding: 3rem;
+          max-height: 90vh;
+          overflow-y: auto;
+        }
+
+        .close-riddle-icon-btn {
+          display: none;
+          /* Hide 'X' on mobile */
+        }
+
+        .riddle-left {
+          border-right: none;
+          border-bottom: 1px solid rgba(212, 184, 134, 0.2);
+          padding-right: 0;
+          padding-bottom: 2.5rem;
+          text-align: center;
+          /* Center text on mobile */
+        }
+
+        .riddle-right {
+          padding-left: 0;
+          padding-top: 2.5rem;
+        }
+
+        .riddle-content h2 {
+          text-align: center;
+          font-size: 1.8rem;
+        }
+
+        .riddle-text {
+          text-align: center;
+          font-size: 1.1rem;
+        }
+
+        .riddle-content input {
+          text-align: center;
+          /* Center input text on mobile */
+        }
+
+        .close-riddle-text-btn {
+          display: block;
+          /* Show text-based close button */
+        }
+      }
+    </style>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+  <meta name="disabled-font-classes" content="font-geist,font-roboto,font-montserrat,font-poppins,font-bricolage,font-jakarta,font-manrope,font-space-grotesk,font-work-sans,font-pt-serif,font-geist-mono,font-space-mono,font-quicksand,font-nunito"><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">.font-merriweather { font-family: 'Merriweather', serif !important; }</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">.font-playfair { font-family: 'Playfair Display', serif !important; }</style></head>
+
+  <body class="bg-[#0A0A0A]">
+    <!-- Main Wrapper -->
+    <div id="wrapper" class="relative min-h-screen opacity-0" style="opacity: 1;">
+      <!-- Header -->
+      <header class="fixed md:p-6 lg:p-8 flex transition-opacity duration-300 z-40 pt-4 pr-4 pb-4 pl-4 top-0 right-0 left-0 items-center justify-center" id="main-header">
+        <a href="#" title="Hadooria" class="main-header__logo z-50">
+          <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/68800e6e2517f15b983e474c.svg" alt="Hadooria Logo" class="h-16 w-auto">
+        </a>
+      </header>
+
+      <!-- Split Screen Hero -->
+      <div class="split-screen-container relative h-screen w-full flex flex-col md:flex-row overflow-hidden">
+        <!-- Artifacts Section -->
+        <div id="split-artifacts" class="split-screen-section relative w-full md:w-1/2 h-1/2 md:h-full group cursor-pointer" data-tab="artifacts">
+          <img src="https://hoirqrkdgbmvpwutwuwj-all.supabase.co/storage/v1/object/public/assets/assets/2c8ee360-b8b7-4b8f-9165-2627a2729c80_1600w.webp" alt="Artifacts" class="absolute top-0 left-0 w-full h-full object-cover">
+          <video class="hero-video absolute top-0 left-0 w-full h-full object-cover opacity-0" muted="" playsinline="" loop="" autoplay="">
+            <source src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/68bc7fab0f0b06e476883b2d.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+          <div class="absolute inset-0 p-8 flex items-center justify-center text-white text-center z-20">
+            <button class="fullscreen-close-btn absolute top-6 right-6 z-30 bg-black bg-opacity-30 rounded-full p-3 text-white opacity-0 pointer-events-none transition-opacity duration-300">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+            </button>
+            <div class="hero-text-content">
+              <span class="hero-title text-3xl md:text-4xl lg:text-5xl font-semibold tracking-wide">
+                Artifacts
+              </span>
+              <h1 class="hero-subtitle text-2xl md:text-3xl font-light mt-2 opacity-0">
+                Vessels of the
+                
+              </h1>
+            </div>
+          </div>
+        </div>
+        <!-- Chronicle Section -->
+        <div id="split-chronicle" class="split-screen-section relative w-full md:w-1/2 h-1/2 md:h-full group cursor-pointer" data-tab="chronicle">
+          <img src="https://hoirqrkdgbmvpwutwuwj-all.supabase.co/storage/v1/object/public/assets/assets/ba55ad23-66f9-4816-b661-47dd743d374b_1600w.webp?w=800&amp;q=80" alt="Chronicle" class="absolute top-0 left-0 w-full h-full object-cover">
+          <video class="hero-video absolute top-0 left-0 w-full h-full object-cover opacity-0" muted="" playsinline="" loop="" autoplay="">
+            <source src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/6903bb41521c845d3cfbf241.mp4" type="video/mp4">
+          </video>
+          <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+          <div class="absolute inset-0 p-8 flex items-center justify-center text-white text-center z-20">
+            <button class="fullscreen-close-btn absolute top-6 right-6 z-30 bg-black bg-opacity-30 rounded-full p-3 text-white opacity-0 pointer-events-none transition-opacity duration-300">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+            </button>
+            <div class="hero-text-content">
+              <span class="hero-title text-3xl md:text-4xl lg:text-5xl font-semibold tracking-wide">
+                Chronicle
+              </span>
+              <h1 class="hero-subtitle text-2xl md:text-3xl font-light mt-2 opacity-0">
+                Enter the
+                
+                .
+              </h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom Navigation -->
+      <div id="bottom-nav" class="fixed bottom-0 left-0 right-0 z-20 p-4 flex items-center justify-center transition-opacity duration-300 opacity-0 pointer-events-none">
+        <div class="tab-ui relative flex bg-black bg-opacity-30 backdrop-blur-sm rounded-full p-1 border border-white/10">
+          <button class="tab-button px-6 py-2 rounded-full text-white text-sm relative z-10 is-active" data-tab="artifacts">
+            Artifacts
+          </button>
+          <button class="tab-button px-6 py-2 rounded-full text-white text-sm relative z-10" data-tab="chronicle">
+            Chronicle
+          </button>
+          <span id="tab-pill" class="absolute top-1 bottom-1 left-1 bg-white/10 rounded-full" style="translate: none; rotate: none; scale: none; transform: translate(4px, 0px); width: 104px;"></span>
+        </div>
+      </div>
+
+      <!-- Main Content Area -->
+      <main class="">
+        <!-- Artifacts Content -->
+        <div id="content-artifacts" class="tab-content hidden" style="display: block;">
+          <div class="artifacts-view">
+            <div class="container mx-auto">
+              <div class="sessions-title text-center">
+                <h1 class="font-playfair">ARTIFACTS</h1>
+              </div>
+              <div class="portfolio-grid" id="portfolioGrid">
+                <div class="grid-item grid-item-01 is-locked">
+                  <div class="image-box">
+                    <div class="image-number">01</div>
+                    <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/689b67bfd757ed288bf2374a.png" alt="Artifact 01" crossorigin="anonymous">
+                    <canvas class="threejs-canvas" data-engine="three.js r160" width="189" height="236" style="width: 189px; height: 236px;"></canvas>
+                    <div class="lock-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(230, 225, 215, 0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="image-title">Creative Flow</div>
+                </div>
+                <div class="grid-item grid-item-03 is-locked">
+                  <div class="image-box">
+                    <div class="image-number">03</div>
+                    <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/689b67bfd757ede133f2374b.png" alt="Artifact 03" crossorigin="anonymous">
+                    <canvas class="threejs-canvas" data-engine="three.js r160" width="189" height="236" style="width: 189px; height: 236px;"></canvas>
+                    <div class="lock-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(230, 225, 215, 0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="image-title">In The Moment</div>
+                </div>
+                <div class="grid-item grid-item-05 is-locked">
+                  <div class="image-box">
+                    <div class="image-number">05</div>
+                    <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/689b67bf9a2be0ab41ef08b1.png" alt="Artifact 05" crossorigin="anonymous">
+                    <canvas class="threejs-canvas" data-engine="three.js r160" width="189" height="236" style="width: 189px; height: 236px;"></canvas>
+                    <div class="lock-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(230, 225, 215, 0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="image-title">Deep Focus</div>
+                </div>
+                <div class="grid-item grid-item-06 is-locked">
+                  <div class="image-box">
+                    <div class="image-number">06</div>
+                    <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/689b67bfdf61c26cda44acca.webp" alt="Artifact 06" crossorigin="anonymous">
+                    <canvas class="threejs-canvas" data-engine="three.js r160" width="189" height="236" style="width: 189px; height: 236px;"></canvas>
+                    <div class="lock-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(230, 225, 215, 0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="image-title">Behind Lens</div>
+                </div>
+                <div class="grid-item grid-item-09" data-description="The raw energy of motion, captured..." data-riddle="The traces of Lugal Irra carry the power of the protectors - his name hides the first half of the secret.
+
+But remember, all power is made of two. Two halves always form whole.
+
+They are guarded by the dragon, with seven shades in its head. Among the heads of the cosmic dragon lies the truth. The one after the sixth is the most merciful — but only if you show respect." data-answer="5127">
+                  <div class="image-box">
+                    <div class="image-number">09</div>
+                    <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/69027bc212e901970ffd3441.jpeg" alt="Artifact 09" crossorigin="anonymous">
+                    <canvas class="threejs-canvas" data-engine="three.js r160" width="497" height="621" style="width: 497px; height: 621px;"></canvas>
+                  </div>
+                  <div class="image-title">LUGAL IRRA</div>
+                </div>
+                <div class="grid-item grid-item-11 is-locked">
+                  <div class="image-box">
+                    <div class="image-number">11</div>
+                    <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/689b67bfd757ed288bf2374a.png" alt="Artifact 11" crossorigin="anonymous">
+                    <canvas class="threejs-canvas" data-engine="three.js r160" width="189" height="236" style="width: 189px; height: 236px;"></canvas>
+                    <div class="lock-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(230, 225, 215, 0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="image-title">Process Work</div>
+                </div>
+                <div class="grid-item grid-item-13 is-locked">
+                  <div class="image-box">
+                    <div class="image-number">13</div>
+                    <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/689b67bfd757ede133f2374b.png" alt="Artifact 13" crossorigin="anonymous">
+                    <canvas class="threejs-canvas" data-engine="three.js r160" width="189" height="236" style="width: 189px; height: 236px;"></canvas>
+                    <div class="lock-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(230, 225, 215, 0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="image-title">Raw Energy</div>
+                </div>
+                <div class="grid-item grid-item-17 is-locked">
+                  <div class="image-box">
+                    <div class="image-number">17</div>
+                    <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/689b67bf9a2be0ab41ef08b1.png" alt="Artifact 17" crossorigin="anonymous">
+                    <canvas class="threejs-canvas" data-engine="three.js r160" width="189" height="236" style="width: 189px; height: 236px;"></canvas>
+                    <div class="lock-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(230, 225, 215, 0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="image-title">Final Take</div>
+                </div>
+                <div class="grid-item grid-item-20 is-locked">
+                  <div class="image-box">
+                    <div class="image-number">20</div>
+                    <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/689b67bfdf61c26cda44acca.webp" alt="Artifact 20" crossorigin="anonymous" class="">
+                    <canvas class="threejs-canvas" data-engine="three.js r160" width="292" height="365" style="width: 292px; height: 365px;"></canvas>
+                    <div class="lock-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(230, 225, 215, 0.6)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                      </svg>
+                    </div>
+                  </div>
+                  <div class="image-title">Complete Vision</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chronicle Content -->
+        <div id="content-chronicle" class="tab-content hidden" style="display: none;">
+          <section class="py-20 md:py-32 bg-[#0A0A0A] chronicle-section">
+            <div class="container mx-auto px-6 space-y-12">
+              <!-- Title -->
+              <div class="sessions-title text-center gsap-reveal">
+                <h1>CHRONICLE</h1>
+              </div>
+
+              <!-- Video Player Demo -->
+              <div class="max-w-4xl mx-auto gsap-reveal">
+                <div class="relative rounded-lg overflow-hidden shadow-2xl shadow-black/30 border border-white/10">
+                  <video class="w-full h-full" controls="" loop="" muted="" playsinline="" poster="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/690a32ce3cd4a71eab53951b.webm" src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/690a32ce3cd4a71eab53951b.webm"></video>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- GSAP Multi-Chapter Scroll Story Section -->
+          <section class="scroll-story-container">
+            <div class="scroll-story-track">
+              <!-- Chapter 1: Hadooria -->
+              <div class="scroll-story-chapter">
+                <h2 class="story-element story-headline" style="top: 20%; left: 10%;">
+                  Hadooria
+                </h2>
+                <div class="story-element story-image-wrapper" style="width: 30vw; height: 55vh; top: 35%; left: 55%;">
+                  <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/68800e6e2517f15b983e474c.svg" alt="A mystical threshold" class="story-image" data-speed="1.1">
+                </div>
+                <div class="story-element story-text" style="bottom: 20%; left: 15%; max-width: 35ch;">
+                  <p>
+                    In the silent folds of existence, where time dissolves into
+                    infinity, there is a name spoken only in whispers —
+                    Hadooria.
+                  </p>
+                  <p class="opacity-70">
+                    Not a brand. Not a place. A threshold. Beyond it lies a
+                    realm where art, mysticism, and memory merge — a world
+                    unseen, yet eternally felt.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Chapter 2: The Creator -->
+              <div class="scroll-story-chapter">
+                <h2 class="story-element story-headline" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                  The Creator
+                </h2>
+                <div class="story-element story-image-wrapper" style="width: 20vw; height: 30vh; bottom: 15%; right: 10%;">
+                  <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/6903b73779f861a51b360c8f.jpeg" alt="The Creator's work" class="story-image" data-speed="1.2">
+                </div>
+                <div class="story-element story-text" style="top: 15%; right: 12%; text-align: right;">
+                  <p>
+                    They call her The Creator, but her true name has been lost
+                    to wind and stone.
+                  </p>
+                </div>
+                <div class="story-element story-text" style="bottom: 20%; left: 18%; opacity: 0.8;">
+                  <p>She exists — and yet she doesn't.</p>
+                </div>
+              </div>
+
+              <!-- Chapter 3: The Works -->
+              <div class="scroll-story-chapter">
+                <h2 class="story-element story-headline" style="bottom: 15%; right: 10%;">
+                  The Works
+                </h2>
+                <div class="story-element story-image-wrapper" style="width: 45vw; height: 70vh; top: 15%; left: 10%;">
+                  <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/6903be8dc3f8ca39049aebfa.jpeg" alt="Art as portals" class="story-image" data-speed="1.05">
+                </div>
+                <div class="story-element story-text" style="top: 20%; right: 15%;">
+                  <p>
+                    Each artifact born of Hadooria carries hidden codes —
+                    whispers etched into matter, symbols woven into shadows.
+                  </p>
+                  <p class="opacity-70 text-2xl">
+                    To the untrained eye, they are exquisite. To the seeker,
+                    they are portals.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Chapter 4: The Legacy -->
+<div class="scroll-story-chapter">
+  
+  <div class="story-element story-image-wrapper" style="width: 87vw; height: 60vh; top: 2%; left: 5%; translate: none; rotate: none; scale: none; opacity: 1; transform: translate3d(59.0251px, 0px, 0px);">
+    
+    <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/6880d39fb0a72088966c69f2.png" alt="An eternal presence" class="story-image opacity-50" data-speed="0.85" style="translate: none; rotate: none; scale: none; transform: translate3d(0px, 0px, 0px) scale(1.072, 1.072)">
+  
+  </div>
+
+  <h2 class="story-element story-headline" style="top: 30%; right: 10%;">
+    The Legacy
+  </h2>
+  <div class="story-element story-text" style="bottom: 20%; right: 15%; text-align: right;">
+    <p>
+      To hold a creation of Hadooria is to hold a fragment of a
+      forgotten world.
+    </p>
+    <p class="opacity-70">
+      Every piece is a reminder that the universe still holds
+      secrets we have yet to touch.
+    </p>
+  </div>
+</div>
+              <!-- Chapter 5: The CTA -->
+              <div class="scroll-story-chapter">
+                <div class="story-element story-text text-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 45ch;">
+                  <p class="text-2xl text-gray-300">
+                    The Chronicle is written. The Vessels await.
+                  </p>
+                  <p class="mt-12">
+                    <a href="#artifacts" id="cta-to-artifacts" class="cta-button">
+                      Explore the Artifacts
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- Riddle Overlay HTML -->
+    <div class="riddle-overlay" id="riddleOverlay">
+      <div class="riddle-content">
+        <!-- New 'X' close button for desktop -->
+        <button class="close-riddle-icon-btn" id="closeRiddleIconBtn">×</button>
+
+        <!-- Left Column -->
+        <div class="riddle-left">
+          <h2>
+            To claim what is hidden,
+            <br>
+            you must first understand its secret.
+          </h2>
+          <p class="riddle-text" id="riddleText"></p>
+        </div>
+
+        <!-- Right Column -->
+        <div class="riddle-right">
+          <input type="text" id="riddleAnswer" placeholder="Enter your answer...">
+          <button class="submit-btn" id="submitRiddle">Unlock Passage</button>
+          <div class="feedback" id="feedback"></div>
+          <!-- Text-based close button for mobile -->
+          <button class="close-riddle-text-btn" id="closeRiddleTextBtn">
+            Step back into the shadows
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- End Riddle Overlay HTML -->
+
+    <script type="module">
+      import * as THREE from "https://esm.sh/three@0.160.0";
+        import { Pane } from "https://cdn.skypack.dev/tweakpane@4.0.4";
+
+        document.addEventListener('DOMContentLoaded', function () {
+            gsap.registerPlugin(ScrollTrigger);
+            gsap.config({ nullTargetWarn: false });
+
+            const mainWrapper = document.getElementById('wrapper');
+            gsap.to(mainWrapper, { opacity: 1, duration: 1, ease: 'power2.inOut' });
+
+            const sections = gsap.utils.toArray('.split-screen-section');
+            const header = document.getElementById('main-header');
+            const bottomNav = document.getElementById('bottom-nav');
+            let isAnimating = false;
+
+            const tabButtons = gsap.utils.toArray('.tab-button');
+            const tabPill = document.getElementById('tab-pill');
+            let isArtifactsGridInitialized = false;
+            let isChronicleInitialized = false;
+            let lenis;
+
+            // Define closeRiddle in this scope so the keydown listener can access it
+            let closeRiddle = () => { if (lenis) lenis.start(); };
+
+            sections.forEach(section => {
+                const heroVideo = section.querySelector('.hero-video');
+                const heroTextContent = section.querySelector('.hero-text-content');
+                const heroSubtitle = section.querySelector('.hero-subtitle');
+                const closeBtn = section.querySelector('.fullscreen-close-btn');
+
+                let hoverTl = gsap.timeline({ paused: true });
+                hoverTl.to(heroVideo, { opacity: 1, duration: 0.7 })
+                        .to(heroTextContent, { y: -16, duration: 0.5, ease: 'power2.out' }, 0)
+                        .to(heroSubtitle, { opacity: 1, duration: 0.5, ease: 'power2.out' }, 0.1);
+
+                section.addEventListener('mouseenter', () => {
+                    if (isAnimating || section.classList.contains('is-fullscreen')) return;
+                    hoverTl.play();
+                });
+
+                section.addEventListener('mouseleave', () => {
+                    if (isAnimating || section.classList.contains('is-fullscreen')) return;
+                    hoverTl.reverse();
+                });
+
+                section.addEventListener('click', (e) => {
+                    if (isAnimating || e.target.closest('.fullscreen-close-btn') || section.classList.contains('is-fullscreen')) return;
+
+                    isAnimating = true;
+                    hoverTl.play();
+                    section.classList.add('is-fullscreen');
+
+                    updateTab(document.querySelector(`.tab-button[data-tab="${section.dataset.tab}"]`));
+
+                    if (lenis) lenis.start();
+
+                    const otherSection = sections.find(s => s !== section);
+                    otherSection.classList.add('is-hidden');
+                    const otherSectionText = otherSection.querySelector('.hero-text-content');
+                    const isMobile = window.innerWidth < 768;
+
+                    const tl = gsap.timeline({ onComplete: () => isAnimating = false });
+
+                    if (isMobile) {
+                        tl.to(section, { height: '100vh', duration: 0.9, ease: 'power3.inOut' })
+                          .to(otherSection, { height: '0vh', duration: 0.9, ease: 'power3.inOut' }, "<");
+                    } else {
+                        tl.to(section, { width: '100vw', duration: 0.9, ease: 'power3.inOut' })
+                          .to(otherSection, { width: '0vw', duration: 0.9, ease: 'power3.inOut' }, "<");
+                    }
+
+                    tl.to(header, { opacity: 0, pointerEvents: 'none', duration: 0.4 }, "<")
+                      .to(otherSectionText, { opacity: 0, duration: 0.5 }, "<")
+                      .to(bottomNav, { opacity: 1, pointerEvents: 'auto', duration: 0.4, delay: 0.5 })
+                      .to(closeBtn, { opacity: 1, pointerEvents: 'auto', duration: 0.4}, "-=0.4");
+                });
+
+                closeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (isAnimating) return;
+                    isAnimating = true;
+
+                    if (lenis) lenis.stop();
+
+                    const activeSection = closeBtn.closest('.split-screen-section');
+                    const otherSection = sections.find(s => s !== activeSection);
+                    const otherTextContent = otherSection.querySelector('.hero-text-content');
+
+                    const isMobile = window.innerWidth < 768;
+                    const tl = gsap.timeline({
+                        onComplete: () => {
+                            activeSection.classList.remove('is-fullscreen');
+                            otherSection.classList.remove('is-hidden');
+                            if (!activeSection.matches(':hover')) {
+                                hoverTl.reverse();
+                            }
+                            isAnimating = false;
+                        }
+                    });
+
+                    tl.to(closeBtn, { opacity: 0, pointerEvents: 'none', duration: 0.4 })
+                      .to(bottomNav, { opacity: 0, pointerEvents: 'none', duration: 0.4 }, "<");
+
+                    if(isMobile) {
+                        tl.to(sections, { height: '50vh', duration: 0.9, ease: 'power3.inOut' }, "<");
+                    } else {
+                        tl.to(sections, { width: '50vw', duration: 0.9, ease: 'power3.inOut' }, "<");
+                    }
+
+                    tl.to(header, { opacity: 1, pointerEvents: 'auto', duration: 0.4, delay: 0.5 })
+                      .to(otherTextContent, { opacity: 1, duration: 0.5, delay: 0.4 }, ">-0.5");
+                });
+            });
+
+            function updateTab(activeTab) {
+                if (!activeTab) return;
+                tabButtons.forEach(button => button.classList.remove('is-active'));
+                activeTab.classList.add('is-active');
+
+                gsap.to(tabPill, {
+                    width: activeTab.offsetWidth,
+                    x: activeTab.offsetLeft,
+                    duration: 0.5,
+                    ease: 'power3.inOut'
+                });
+
+                const tabName = activeTab.dataset.tab;
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    const isVisible = content.id.includes(tabName);
+                    gsap.set(content, { display: isVisible ? 'block' : 'none' });
+
+                    if (isVisible) {
+                        if (tabName === 'artifacts') {
+                            initArtifactsGrid();
+                        } else if (tabName === 'chronicle') {
+                            initChronicleView();
+                        }
+                    }
+                });
+            }
+
+            const initialActiveTab = document.querySelector('.tab-button.is-active');
+            if(initialActiveTab) {
+                updateTab(initialActiveTab);
+            }
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => updateTab(button));
+            });
+
+            function initLenis() {
+                if (lenis) return;
+                lenis = new Lenis({
+                    lerp: 0.1
+                });
+
+                lenis.on("scroll", ScrollTrigger.update);
+
+                gsap.ticker.add((time) => {
+                    lenis.raf(time * 1000);
+                });
+                gsap.ticker.lagSmoothing(0);
+                lenis.stop();
+            }
+
+            function initArtifactsGrid() {
+                if (isArtifactsGridInitialized) return;
+                isArtifactsGridInitialized = true;
+                initLenis();
+
+                const allEffects = [];
+
+                function createVignetteFisheyeDistortion(canvas, imageUrl) {
+                    return new Promise((resolve) => {
+                        const scene = new THREE.Scene();
+                        const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+                        let renderer, material;
+                        try {
+                            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, premultipliedAlpha: false, antialias: true });
+                        } catch (e) {
+                            console.error("WebGL initialization failed.", e); resolve(null); return;
+                        }
+
+                        const updateCanvasSize = () => {
+                            const container = canvas.parentElement;
+                            if (!container) return;
+                            const rect = container.getBoundingClientRect();
+                            const width = Math.max(1, Math.floor(rect.width));
+                            const height = Math.max(1, Math.floor(rect.height));
+                            const pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+                            renderer.setSize(width, height);
+                            renderer.setPixelRatio(pixelRatio);
+                            if (material && material.uniforms) material.uniforms.uAspectRatio.value = width / height;
+                        };
+
+                        const textureLoader = new THREE.TextureLoader();
+                        textureLoader.crossOrigin = "anonymous";
+                        textureLoader.load(imageUrl, (texture) => {
+                            const geometry = new THREE.PlaneGeometry(2, 2);
+                            texture.minFilter = THREE.LinearFilter;
+                            texture.magFilter = THREE.LinearFilter;
+
+                            material = new THREE.ShaderMaterial({
+                                uniforms: {
+                                    uTexture: { value: texture },
+                                    uTime: { value: 0 },
+                                    uFisheyeIntensity: { value: 0 },
+                                    uFisheyeStrength: { value: 1.2 }, uVignetteStart: { value: 0.3 }, uVignetteEnd: { value: 0.8 }, uFisheyeRadius: { value: 0.8 }, uChromaticAberration: { value: 0.005 }, uNoiseIntensity: { value: 0.08 }, uVignetteIntensity: { value: 0.32 }, uAspectRatio: { value: 1 }
+                                },
+                                vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+                                fragmentShader: `
+                                    uniform sampler2D uTexture; uniform float uTime, uFisheyeIntensity, uFisheyeStrength, uVignetteStart, uVignetteEnd, uFisheyeRadius, uChromaticAberration, uNoiseIntensity, uVignetteIntensity, uAspectRatio; varying vec2 vUv;
+                                    vec2 fisheyeDistortion(vec2 uv, float intensity) { vec2 center = vec2(0.5); vec2 delta = uv - center; delta.x *= uAspectRatio; float dist = length(delta); if (dist < uFisheyeRadius && dist > 0.0) { float percent = dist / uFisheyeRadius; float theta = percent * percent * intensity * uFisheyeStrength; delta = delta / dist * tan(theta) * dist; } delta.x /= uAspectRatio; return center + delta; }
+                                    void main() { vec2 uv = vUv; vec2 center = vec2(0.5); vec2 delta = uv - center; delta.x *= uAspectRatio; float distFromCenter = length(delta); float vignetteMask = smoothstep(uVignetteStart, uVignetteEnd, distFromCenter); vec2 finalUV = uv; if (uFisheyeIntensity > 0.001) { finalUV = mix(uv, fisheyeDistortion(uv, uFisheyeIntensity), vignetteMask); } vec3 color; if (uFisheyeIntensity > 0.001) { vec2 dir = normalize(finalUV - center); float r = texture2D(uTexture, finalUV + dir * uChromaticAberration * uFisheyeIntensity).r; float g = texture2D(uTexture, finalUV).g; float b = texture2D(uTexture, finalUV - dir * uChromaticAberration * uFisheyeIntensity).b; color = vec3(r, g, b); } else { color = texture2D(uTexture, finalUV).rgb; } if (uFisheyeIntensity > 0.001) { float noise = fract(sin(dot(uv + uTime, vec2(12.9898, 78.233))) * 43758.5453) * uNoiseIntensity * uFisheyeIntensity; color += noise; } color *= 1.0 - smoothstep(uVignetteStart, uVignetteEnd, distFromCenter) * uVignetteIntensity; gl_FragColor = vec4(color, 1.0); }
+                                `,
+                                transparent: true
+                            });
+
+                            const mesh = new THREE.Mesh(geometry, material);
+                            scene.add(mesh);
+                            updateCanvasSize();
+                            window.addEventListener('resize', updateCanvasSize);
+
+                            let animationId, time = 0;
+                            const effect = {
+                                currentTween: null, _fisheyeIntensity: 0, material: material,
+                                start() { if (this.currentTween) this.currentTween.kill(); this.currentTween = gsap.to(this, { _fisheyeIntensity: 1, duration: 0.64, ease: "cubic-bezier(0.23, 1, 0.32, 1)" }); },
+                                stop() { if (this.currentTween) this.currentTween.kill(); this.currentTween = gsap.to(this, { _fisheyeIntensity: 0, duration: 0.64, ease: "cubic-bezier(0.23, 1, 0.32, 1)" }); },
+                                dispose() { if(this.currentTween) this.currentTween.kill(); cancelAnimationFrame(animationId); renderer.dispose(); geometry.dispose(); material.dispose(); texture.dispose(); window.removeEventListener('resize', updateCanvasSize); }
+                            };
+
+                            const animate = () => { time += 0.016; material.uniforms.uTime.value = time; material.uniforms.uFisheyeIntensity.value = effect._fisheyeIntensity; renderer.render(scene, camera); animationId = requestAnimationFrame(animate); };
+                            animate();
+                            resolve(effect);
+                        }, undefined, () => resolve(null));
+                    });
+                }
+
+                function createHoverAnimation(gridItem) {
+                    const img = gridItem.querySelector("img");
+                    const canvas = gridItem.querySelector(".threejs-canvas");
+                    const title = gridItem.querySelector(".image-title");
+                    let hoverTimeline = null;
+                    const rootStyles = getComputedStyle(document.documentElement);
+                    const colorAccent = rootStyles.getPropertyValue('--color-accent').trim();
+                    const colorForeground = rootStyles.getPropertyValue('--color-foreground').trim();
+
+                    return {
+                        enter() {
+                            if (hoverTimeline) hoverTimeline.kill();
+                            hoverTimeline = gsap.timeline();
+                            hoverTimeline.to(img, { opacity: 0, duration: 0.64, ease: "cubic-bezier(0.23, 1, 0.32, 1)" }, 0)
+                                       .to(canvas, { opacity: 1, duration: 0.64, ease: "cubic-bezier(0.23, 1, 0.32, 1)" }, 0)
+                                       .to(title, { color: colorAccent, x: 12, "--before-opacity": 1, "--before-x": "0px", textShadow: "0 0 5px rgba(230, 225, 215, 0.4), 0 0 15px rgba(230, 225, 215, 0.2)", duration: 0.2, ease: "cubic-bezier(0.23, 1, 0.32, 1)" }, 0);
+                        },
+                        leave() {
+                            if (hoverTimeline) hoverTimeline.kill();
+                            hoverTimeline = gsap.timeline();
+                            hoverTimeline.to(img, { opacity: 1, duration: 0.64, ease: "cubic-bezier(0.23, 1, 0.32, 1)" }, 0)
+                                       .to(canvas, { opacity: 0, duration: 0.64, ease: "cubic-bezier(0.23, 1, 0.32, 1)" }, 0)
+                                       .to(title, { color: colorForeground, x: 0, "--before-opacity": 0, "--before-x": "-8px", textShadow: "0 0 0px rgba(230, 225, 215, 0)", duration: 0.2, ease: "cubic-bezier(0.23, 1, 0.32, 1)" }, 0);
+                        }
+                    };
+                }
+
+                // --- Riddle JavaScript ---
+                const riddleOverlay = document.getElementById('riddleOverlay');
+                // Updated button selectors
+                const closeRiddleIconBtn = document.getElementById('closeRiddleIconBtn');
+                const closeRiddleTextBtn =
+                  document.getElementById('closeRiddleTextBtn');
+                const riddleText = document.getElementById('riddleText');
+                const riddleAnswerInput = document.getElementById('riddleAnswer');
+                const submitRiddleBtn = document.getElementById('submitRiddle');
+                const feedback = document.getElementById('feedback');
+                let currentRiddleAnswer = '';
+
+                const openRiddle = (riddle, answer) => {
+                  currentRiddleAnswer = answer.toLowerCase(); // Ensure answer is lowercase for comparison
+                  riddleOverlay.classList.add('active');
+                  feedback.textContent = '';
+                  riddleAnswerInput.value = '';
+
+                  riddleText.innerHTML = '';
+                  const cleanRiddle = riddle.replace(/^"|"$/g, '');
+
+                  const contentSpan = document.createElement('span');
+                  contentSpan.innerHTML = cleanRiddle;
+                  riddleText.appendChild(contentSpan);
+
+                  // GSAP Animation
+                  gsap.fromTo(
+                    riddleText.children,
+                    { opacity: 0, y: 10 },
+                    { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }
+                  );
+
+                  if (lenis) lenis.stop();
+                };
+
+                // Re-assign the outer-scoped function
+                closeRiddle = () => {
+                  riddleOverlay.classList.remove('active');
+                  if (lenis) lenis.start();
+                };
+
+                // Add listeners to BOTH close buttons
+                closeRiddleIconBtn.addEventListener('click', closeRiddle);
+                closeRiddleTextBtn.addEventListener('click', closeRiddle);
+
+                submitRiddleBtn.addEventListener('click', () => {
+                  const answer = riddleAnswerInput.value.trim().toLowerCase();
+                  feedback.classList.remove('success', 'failure', 'failure-shake');
+                  if (answer === currentRiddleAnswer) {
+                    feedback.textContent =
+                      'You have seen through the veil. The artifact awaits you.';
+                    feedback.classList.add('success');
+                    setTimeout(() => {
+                      closeRiddle();
+                      // Using a custom modal/alert is better, but alert is here as per original file
+                      // alert('Artifact Unlocked!');
+
+                      // You might want to replace this alert with a non-blocking notification
+                      console.log("Artifact Unlocked!");
+
+                    }, 1500);
+                  } else {
+                    feedback.textContent =
+                      'Not yet. Look closer. The pattern hides in plain sight.';
+                    feedback.classList.add('failure');
+                    setTimeout(() => feedback.classList.add('failure-shake'), 10);
+                  }
+                });
+
+                riddleAnswerInput.addEventListener('keypress', (e) => {
+                  if (e.key === 'Enter') submitRiddleBtn.click();
+                });
+                // --- End Riddle JavaScript ---
+
+
+                document.querySelectorAll(".artifacts-view .grid-item").forEach(function(gridItem) {
+                    const box = gridItem.querySelector('.image-box');
+                    const img = gridItem.querySelector("img");
+                    const canvas = gridItem.querySelector(".threejs-canvas");
+                    const titleEl = gridItem.querySelector(".image-title");
+
+                    if (!img || !canvas || !gridItem || !titleEl) return;
+
+                    const isLocked = gridItem.classList.contains('is-locked');
+
+                    if (!isLocked) {
+                        box.addEventListener('click', () => {
+                            openRiddle(gridItem.dataset.riddle, gridItem.dataset.answer); // <-- NEW
+                        });
+                    }
+
+                    let effect = null;
+                    const hoverAnimation = createHoverAnimation(gridItem);
+                    const initializeEffect = () => {
+                        createVignetteFisheyeDistortion(canvas, img.src).then((createdEffect) => {
+                            effect = createdEffect;
+                            if (effect) allEffects.push(effect);
+                        });
+                    };
+                    if (img.complete && img.naturalWidth > 0) { initializeEffect(); }
+                    else { img.addEventListener("load", initializeEffect, { once: true }); }
+
+                    if (!isLocked) {
+                        box.addEventListener("mouseenter", function() { if (effect) effect.start(); hoverAnimation.enter(); });
+                        box.addEventListener("mouseleave", function() { if (effect) effect.stop(); hoverAnimation.leave(); });
+                    }
+                });
+
+                window.addEventListener("beforeunload", () => {
+                    allEffects.forEach(effect => effect?.dispose());
+                });
+
+                gsap.utils.toArray('.artifacts-view .gsap-reveal').forEach(el => {
+                    gsap.fromTo(el, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
+                });
+            }
+
+            function initChronicleView() {
+                if(isChronicleInitialized) {
+                    ScrollTrigger.refresh();
+                    return;
+                }
+                isChronicleInitialized = true;
+                initLenis();
+
+                ScrollTrigger.matchMedia({
+                    "(min-width: 769px)": function() {
+                        const storyContainer = document.querySelector('.scroll-story-container');
+                        const storyTrack = document.querySelector('.scroll-story-track');
+                        const chapters = gsap.utils.toArray('.scroll-story-chapter');
+
+                            let horizontalScroll = gsap.to(storyTrack, {
+                             x: () => -(storyTrack.offsetWidth - window.innerWidth), ease: "none", // <-- FIX 5: With this correct calculation
+                             scrollTrigger: {
+                                 trigger: storyContainer, pin: true, scrub: 1,
+                                 end: () => "+=" + (storyTrack.offsetWidth - window.innerWidth)
+                             }
+                         });
+
+                        chapters.forEach((chapter) => {
+                            const elements = chapter.querySelectorAll('.story-element');
+                            elements.forEach(el => {
+                                const speed = el.querySelector('img')?.dataset.speed || 1;
+                                gsap.fromTo(el, { y: () => (Math.random() - 0.5) * 200, opacity: 0 }, { y: 0, opacity: 1, scale: 1, ease: 'power2.out', scrollTrigger: { trigger: chapter, containerAnimation: horizontalScroll, start: 'left center', end: 'center center', scrub: 1 } });
+                                gsap.to(el, { x: () => (1 - parseFloat(speed)) * (chapter.offsetWidth * 0.5), ease: 'none', scrollTrigger: { trigger: chapter, containerAnimation: horizontalScroll, start: 'left right', end: 'right left', scrub: true } });
+                                if (el.classList.contains('story-image-wrapper')) {
+                                    gsap.fromTo(el.querySelector('img'), { scale: 1.2 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: chapter, containerAnimation: horizontalScroll, start: 'left right', end: 'right left', scrub: true } });
+                                }
+                            });
+                        });
+                    },
+                    "(max-width: 768px)": function() {
+                        gsap.utils.toArray('.scroll-story-chapter .story-element').forEach(el => {
+                             gsap.fromTo(el, { y: 50, opacity: 0 }, { y: 0, opacity: 1, ease: 'power2.out', duration: 1, scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' } });
+                        });
+                    }
+                });
+                 gsap.utils.toArray('.chronicle-section .gsap-reveal').forEach(el => {
+                    gsap.fromTo(el, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' }});
+                });
+
+                // --- NEW CTA BUTTON LOGIC ---
+                const ctaButton = document.getElementById('cta-to-artifacts');
+                if (ctaButton) {
+                  ctaButton.addEventListener('click', (e) => {
+                    e.preventDefault();
+
+                    // Find the artifacts tab button
+                    const artifactsTabButton = document.querySelector('.tab-button[data-tab="artifacts"]');
+                    if (artifactsTabButton) {
+                      updateTab(artifactsTabButton);
+                    }
+
+                    // Scroll to the top of the artifacts content
+                    if (lenis) {
+                      // We need to make sure the content is visible before scrolling
+                      gsap.delayedCall(0.1, () => { // Wait a tick for tab content to switch
+                           lenis.scrollTo('#content-artifacts', {
+                             offset: -60, // A little offset from the top
+                             duration: 2,
+                             ease: 'power3.inOut'
+                          });
+                      });
+                    }
+                  });
+                }
+                // --- END NEW CTA BUTTON LOGIC ---
+            }
+
+           document.addEventListener("keydown", function(e) {
+              if (e.key === "Escape") {
+                  const riddleOverlay = document.getElementById('riddleOverlay');
+                  if (riddleOverlay?.classList.contains('active')) {
+                      closeRiddle(); // This will now call the correctly scoped function
+                  }
+              }
+           });
+        });
+    </script>
+  
+</body></html>
