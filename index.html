@@ -1,4 +1,3 @@
-
 <html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +10,8 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=Playfair+Display:ital,wght@1,400..900&amp;display=swap" rel="stylesheet">
+    <!-- CONSOLIDATED FONT LOAD -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@1,400..900&family=Viaoda+Libre&display=swap" rel="stylesheet">
 
     <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -35,6 +35,20 @@
         color: #EAE8E3;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* ADDED: Prevent body scroll when riddle is open */
+      body.riddle-open {
+        overflow: hidden;
+      }
+
+      /* ADDED: Define global CSS variables */
+      :root {
+        --color-background: rgb(15, 15, 15);
+        --color-foreground: rgb(230, 225, 215);
+        --color-accent: rgb(200, 180, 160);
+        --font-primary: "Cormorant Garamond", serif;
+        --font-secondary: "Inter", sans-serif;
       }
 
       .hero-title,
@@ -75,11 +89,7 @@
 
       /* --- Artifacts Section Styles --- */
       .artifacts-view {
-        --color-background: rgb(15, 15, 15);
-        --color-foreground: rgb(230, 225, 215);
-        --color-accent: rgb(200, 180, 160);
-        --font-primary: "Cormorant Garamond", serif;
-        --font-secondary: "Inter", sans-serif;
+        /* REMOVED: Variables moved to :root */
         --noise-opacity: 0.15;
         background: radial-gradient(circle at 10% 20%, var(--color-background) 0%, rgb(0, 0, 0) 90%);
         color: var(--color-foreground);
@@ -396,12 +406,15 @@
         inset: 0;
         background: rgba(5, 5, 5, 0.95);
         display: none;
-        align-items: center;
+        align-items: center; /* <-- Will be changed on mobile */
         justify-content: center;
         flex-direction: column;
         animation: fadeIn 0.6s ease forwards;
+        overflow-y: auto;
+        padding: 4vh 3vw;
+        overscroll-behavior: contain; /* ADDED: Prevents scroll "chaining" to body */
       }
-
+ 
       .riddle-overlay.active {
         display: flex;
       }
@@ -417,23 +430,53 @@
       }
 
       .riddle-content {
-        /* Changed from centered box to split-screen layout */
-        display: flex;
-        max-width: 1100px;
-        width: 90%;
-        height: auto;
-        min-height: 600px;
-        padding: 5rem;
-        background: rgba(15, 15, 15, 0.85);
-        border: 1px solid rgba(212, 184, 134, 0.2);
-        border-radius: 12px;
-        /* Subtler radius */
-        box-shadow: 0 0 80px rgba(212, 184, 134, 0.1);
-        backdrop-filter: blur(12px);
+        position: relative;
+        width: min(960px, 92vw);
+        max-height: calc(100vh - 4rem);
+        padding: clamp(1.75rem, 4vw, 3rem);
+        background: rgba(15, 15, 15, 0.88);
+        border: 1px solid rgba(212, 184, 134, 0.25);
+        border-radius: 16px;
+        box-shadow: 0 35px 65px -20px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(14px);
         animation: scaleUp 0.6s ease forwards;
         text-align: left;
-        /* Changed from center */
-        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas:
+          "heading"
+          "riddle"
+          "form";
+        gap: clamp(1.5rem, 4vw, 2.75rem);
+        overflow-y: auto;
+        scrollbar-width: thin;
+      }
+
+      .riddle-content::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .riddle-content::-webkit-scrollbar-thumb {
+        background: rgba(212, 184, 134, 0.35);
+        border-radius: 9999px;
+      }
+
+      .riddle-header {
+        grid-area: heading;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+        max-width: 640px;
+      }
+
+      .riddle-kicker {
+        font-family: var(--font-secondary);
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        color: rgba(212, 184, 134, 0.7);
+        margin: 0;
       }
 
       @keyframes scaleUp {
@@ -469,85 +512,103 @@
         transform: scale(1.1);
       }
 
-      /* Split-screen containers */
-      .riddle-left {
-        flex: 1.2;
-        padding-right: 4rem;
-        border-right: 1px solid rgba(212, 184, 134, 0.2);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      .riddle-right {
-        flex: 1;
-        padding-left: 4rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
       .riddle-content h2 {
-        font-size: 2.2rem;
-        /* Larger title */
-        letter-spacing: 1px;
-        color: #d4b886;
-        margin-bottom: 25px;
+        font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+        letter-spacing: 0.08em;
+        color: #e7e0d4;
+        margin: 0;
         font-family: var(--font-primary);
         font-weight: 700;
-        line-height: 1.3;
+        line-height: 1.25;
+        text-transform: uppercase;
       }
 
       .riddle-text {
-        font-size: 1.3rem;
-        /* Larger riddle text */
-        line-height: 1.8;
-        margin-bottom: 25px;
+        grid-area: riddle;
+        font-size: clamp(1.05rem, 1.8vw, 1.3rem);
         color: #e7e3da;
         font-family: var(--font-primary);
-        font-style: italic;
-        font-weight: 400;
-      }
-
-      .riddle-text>span {
-        display: block;
-        opacity: 0;
-      }
-
-      .riddle-content input {
+        letter-spacing: 0.01em;
+        line-height: 1.8;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        max-width: 640px;
         width: 100%;
-        padding: 14px;
-        /* More padding */
-        border: none;
-        border-bottom: 1px solid #666;
-        background: transparent;
-        color: #fff;
-        font-size: 1.1rem;
-        /* Larger text */
-        outline: none;
-        text-align: left;
-        /* Changed from center */
-        transition: all 0.3s ease;
+      }
+
+      .riddle-text > p.riddle-stanza {
+        opacity: 0;
+        margin: 0;
+        width: 100%;
+      }
+
+      .riddle-form {
+        grid-area: form;
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        padding: clamp(1.5rem, 3.5vw, 2.25rem);
+        border-radius: 14px;
+        border: 1px solid rgba(212, 184, 134, 0.22);
+        background: linear-gradient(160deg, rgba(22, 20, 18, 0.95), rgba(14, 14, 14, 0.85));
+        box-shadow: 0 20px 45px -25px rgba(0, 0, 0, 0.65);
+      }
+
+      .riddle-instruction {
         font-family: var(--font-secondary);
+        font-size: 0.85rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        text-align: center;
+        color: rgba(212, 184, 134, 0.75);
+        margin: 0;
       }
 
-      .riddle-content input::placeholder {
-        color: #777;
+      .riddle-answer-group {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+        width: 100%;
       }
 
-      .riddle-content input:focus {
+      .riddle-answer-box {
+        flex: 1 1 64px;
+        max-width: 88px;
+        min-width: 56px;
+        height: 72px;
+        border-radius: 12px;
+        border: 1px solid rgba(212, 184, 134, 0.35);
+        background: rgba(24, 24, 24, 0.9);
+        color: #fff;
+        font-size: 2rem;
+        line-height: 1;
+        text-align: center;
+        font-family: var(--font-secondary);
+        font-weight: 600;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      }
+
+      .riddle-answer-box:focus {
+        outline: none;
         border-color: #d4b886;
-        box-shadow: 0 5px 15px rgba(212, 184, 134, 0.1);
+        box-shadow: 0 10px 25px rgba(212, 184, 134, 0.18);
+        background: rgba(38, 32, 24, 0.92);
       }
 
-      .submit-btn {
-        margin-top: 25px;
+      .riddle-answer-box.error {
+        border-color: #d88a8a;
+        box-shadow: 0 0 0 2px rgba(216, 138, 138, 0.15);
+      }
+
+      .riddle-form .submit-btn {
         padding: 16px 30px;
         font-size: 1rem;
-        letter-spacing: 2px;
+        letter-spacing: 0.28em;
         background: linear-gradient(135deg, #1f1f1f, #141414);
         color: #d4b886;
-        border: 1px solid #3e3e3e;
+        border: 1px solid rgba(212, 184, 134, 0.35);
         border-radius: 40px;
         cursor: pointer;
         transition: all 0.3s ease;
@@ -555,24 +616,25 @@
         font-family: var(--font-primary);
         font-weight: 700;
         width: 100%;
-        /* Full width */
       }
 
-      .submit-btn:hover {
-        background: linear-gradient(135deg, #2a2a2a, #1f1f1f);
+      .riddle-form .submit-btn:hover {
+        background: linear-gradient(135deg, #2a2a2a, #1b1b1b);
         box-shadow: 0 0 25px rgba(212, 184, 134, 0.25);
-        transform: scale(1.02);
+        transform: translateY(-1px);
       }
 
       .feedback {
-        margin-top: 20px;
         font-size: 0.95rem;
-        opacity: 0.8;
+        opacity: 0.85;
         min-height: 24px;
         transition: color 0.3s ease;
         font-family: var(--font-secondary);
         text-align: center;
-        /* Feedback remains centered */
+      }
+
+      .riddle-form .feedback {
+        align-self: stretch;
       }
 
       .success {
@@ -607,25 +669,45 @@
         }
       }
 
-      /* Text-based close button (for mobile) */
       .close-riddle-text-btn {
-        margin-top: 20px;
         cursor: pointer;
-        font-size: 0.9rem;
-        color: #999;
-        transition: color 0.3s ease;
-        background: none;
-        border: none;
+        font-size: 0.85rem;
+        color: rgba(212, 184, 134, 0.8);
+        transition: color 0.3s ease, background 0.3s ease;
+        background: rgba(30, 30, 30, 0.5);
+        border: 1px solid rgba(212, 184, 134, 0.25);
         font-family: var(--font-secondary);
         text-transform: uppercase;
+        letter-spacing: 0.24em;
+        border-radius: 9999px;
+        padding: 0.75rem 1.75rem;
+        align-self: center;
         display: none;
-        /* Hidden on desktop */
-        width: 100%;
-        text-align: center;
       }
-
+ 
       .close-riddle-text-btn:hover {
         color: #fff;
+        background: rgba(30, 30, 30, 0.8);
+      }
+
+      @media (min-width: 1024px) {
+        .riddle-content {
+          grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+          grid-template-areas:
+            "heading heading"
+            "riddle form";
+        }
+
+        .riddle-header {
+          flex-direction: row;
+          align-items: flex-end;
+          justify-content: space-between;
+          gap: 1.5rem;
+        }
+
+        .riddle-content h2 {
+          max-width: 600px;
+        }
       }
 
       /* Responsive Media Queries */
@@ -722,35 +804,36 @@
 
       /* --- NEW Riddle Responsive Styles --- */
       @media (max-width: 900px) {
+        .riddle-overlay {
+          align-items: flex-start;
+          justify-content: flex-start;
+          padding-top: 4vh;
+          padding-bottom: 6vh;
+        }
+
         .riddle-content {
-          flex-direction: column;
-          /* Stack vertically */
-          width: 90vw;
-          max-width: 500px;
-          /* Revert to modal-like max-width */
-          min-height: 0;
-          padding: 3rem;
-          max-height: 90vh;
-          overflow-y: auto;
+          width: min(540px, 94vw);
+          max-height: none;
+          padding: clamp(1.75rem, 6vw, 2.5rem);
+          grid-template-columns: minmax(0, 1fr);
+          grid-template-areas:
+            "heading"
+            "riddle"
+            "form";
+          gap: 2rem;
+          overflow-y: visible;
         }
 
         .close-riddle-icon-btn {
-          display: none;
-          /* Hide 'X' on mobile */
+          font-size: 2.25rem;
+          top: clamp(1.1rem, 4vw, 1.75rem);
+          right: clamp(1.1rem, 4vw, 1.75rem);
         }
 
-        .riddle-left {
-          border-right: none;
-          border-bottom: 1px solid rgba(212, 184, 134, 0.2);
-          padding-right: 0;
-          padding-bottom: 2.5rem;
+        .riddle-header {
+          align-items: center;
           text-align: center;
-          /* Center text on mobile */
-        }
-
-        .riddle-right {
-          padding-left: 0;
-          padding-top: 2.5rem;
+          margin: 0 auto;
         }
 
         .riddle-content h2 {
@@ -761,16 +844,95 @@
         .riddle-text {
           text-align: center;
           font-size: 1.1rem;
+          align-items: center;
         }
 
-        .riddle-content input {
+        .riddle-text > p.riddle-stanza {
+          max-width: 46ch;
+        }
+
+        .riddle-form {
+          padding: clamp(1.25rem, 5vw, 1.75rem);
+        }
+
+        .riddle-form .feedback {
           text-align: center;
-          /* Center input text on mobile */
+        }
+
+        .riddle-answer-group {
+          gap: 0.85rem;
+        }
+
+        .riddle-answer-box {
+          flex: 1 1 calc(50% - 1rem);
+          max-width: 80px;
+          height: 64px;
+          font-size: 1.75rem;
         }
 
         .close-riddle-text-btn {
-          display: block;
-          /* Show text-based close button */
+          display: inline-flex;
+          justify-content: center;
+          background: rgba(30, 30, 30, 0.7);
+          border: 1px solid rgba(212, 184, 134, 0.3);
+          margin-top: 1rem;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .riddle-overlay {
+          padding-top: 3rem;
+          padding-bottom: 5rem;
+          padding-left: 1.25rem;
+          padding-right: 1.25rem;
+        }
+
+        .riddle-content {
+          width: 100%;
+          padding: 1.75rem 1.5rem;
+          border-radius: 12px;
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+          gap: 1.75rem;
+        }
+
+        .close-riddle-icon-btn {
+          font-size: 1.9rem;
+          top: 1rem;
+          right: 1rem;
+        }
+
+        .riddle-text {
+          font-size: 1rem;
+          line-height: 1.65;
+        }
+
+        .riddle-form {
+          padding: 1.15rem 1.1rem;
+          gap: 1.1rem;
+        }
+
+        .riddle-answer-box {
+          flex: 1 1 calc(50% - 0.75rem);
+          min-width: 48px;
+          height: 56px;
+          font-size: 1.5rem;
+          border-radius: 10px;
+        }
+
+        .riddle-form .submit-btn {
+          font-size: 0.9rem;
+          padding: 0.9rem 1.25rem;
+          letter-spacing: 0.22em;
+        }
+
+        .feedback {
+          font-size: 0.85rem;
+        }
+
+        .close-riddle-text-btn {
+          width: min(90vw, 360px);
+          padding: 0.65rem 1.5rem;
+          letter-spacing: 0.2em;
         }
       }
     </style>
@@ -807,9 +969,9 @@
     
     
     
+    <!-- REMOVED REDUNDANT FONT LINKS THAT WERE HERE -->
     
-    
-  <meta name="disabled-font-classes" content="font-geist,font-roboto,font-montserrat,font-poppins,font-bricolage,font-jakarta,font-manrope,font-space-grotesk,font-work-sans,font-pt-serif,font-geist-mono,font-space-mono,font-quicksand,font-nunito"><link id="all-fonts-link-font-merriweather" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&amp;display=swap"><style id="all-fonts-style-font-merriweather">.font-merriweather { font-family: 'Merriweather', serif !important; }</style><link id="all-fonts-link-font-instrument-serif" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:wght@400;500;600;700&amp;display=swap"><style id="all-fonts-style-font-instrument-serif">.font-instrument-serif { font-family: 'Instrument Serif', serif !important; }</style><link id="all-fonts-link-font-playfair" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;900&amp;display=swap"><style id="all-fonts-style-font-playfair">.font-playfair { font-family: 'Playfair Display', serif !important; }</style></head>
+  </head>
 
   <body class="bg-[#0A0A0A]">
     <!-- Main Wrapper -->
@@ -841,8 +1003,7 @@
                 Artifacts
               </span>
               <h1 class="hero-subtitle text-2xl md:text-3xl font-light mt-2 opacity-0">
-                Vessels of the
-                
+                Vessels of the <em>Unseen</em>.
               </h1>
             </div>
           </div>
@@ -865,9 +1026,7 @@
                 Chronicle
               </span>
               <h1 class="hero-subtitle text-2xl md:text-3xl font-light mt-2 opacity-0">
-                Enter the
-                
-                .
+                Enter the <em>Lore</em>.
               </h1>
             </div>
           </div>
@@ -952,11 +1111,7 @@
                   </div>
                   <div class="image-title">Behind Lens</div>
                 </div>
-                <div class="grid-item grid-item-09" data-description="The raw energy of motion, captured..." data-riddle="The traces of Lugal Irra carry the power of the protectors - his name hides the first half of the secret.
-
-But remember, all power is made of two. Two halves always form whole.
-
-They are guarded by the dragon, with seven shades in its head. Among the heads of the cosmic dragon lies the truth. The one after the sixth is the most merciful — but only if you show respect." data-answer="5127">
+                <div class="grid-item grid-item-09" data-description="The raw energy of motion, captured..." data-riddle="<p class='riddle-stanza'>The traces of Lugal Irra carry the power of the protectors&mdash;his name hides the first half of the secret.</p><p class='riddle-stanza'>But remember, all power is made of two. Two halves always form whole.</p><p class='riddle-stanza'>They are guarded by the dragon, with seven shades in its head. Among the heads of the cosmic dragon lies the truth. The one after the sixth is the most merciful&mdash;but only if you show respect.</p>" data-answer="5127">
                   <div class="image-box">
                     <div class="image-number">09</div>
                     <img src="https://storage.googleapis.com/msgsndr/tQYsegvUGZjPwRByOG6g/media/69027bc212e901970ffd3441.jpeg" alt="Artifact 09" crossorigin="anonymous">
@@ -1153,32 +1308,38 @@ They are guarded by the dragon, with seven shades in its head. Among the heads o
     <div class="riddle-overlay" id="riddleOverlay">
       <div class="riddle-content">
         <!-- New 'X' close button for desktop -->
-        <button class="close-riddle-icon-btn" id="closeRiddleIconBtn">×</button>
+        <button class="close-riddle-icon-btn" id="closeRiddleIconBtn" type="button">×</button>
 
-        <!-- Left Column -->
-        <div class="riddle-left">
+        <div class="riddle-header">
+          <p class="riddle-kicker">Artifact Gate</p>
           <h2>
             To claim what is hidden,
             <br>
             you must first understand its secret.
           </h2>
-          <p class="riddle-text" id="riddleText"></p>
         </div>
 
-        <!-- Right Column -->
-        <div class="riddle-right">
-          <input type="text" id="riddleAnswer" placeholder="Enter your answer...">
-          <button class="submit-btn" id="submitRiddle">Unlock Passage</button>
+        <div class="riddle-text" id="riddleText"></div>
+
+        <div class="riddle-form" role="form" aria-labelledby="riddleText">
+          <p class="riddle-instruction">Enter the four symbols in order.</p>
+          <div class="riddle-answer-group" id="riddleAnswerGroup" role="group" aria-label="Riddle answer">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="riddle-answer-box" data-index="0" aria-label="Riddle answer digit 1">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="riddle-answer-box" data-index="1" aria-label="Riddle answer digit 2">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="riddle-answer-box" data-index="2" aria-label="Riddle answer digit 3">
+            <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="riddle-answer-box" data-index="3" aria-label="Riddle answer digit 4">
+          </div>
+          <button class="submit-btn" id="submitRiddle" type="button">Unlock Passage</button>
           <div class="feedback" id="feedback"></div>
-          <!-- Text-based close button for mobile -->
-          <button class="close-riddle-text-btn" id="closeRiddleTextBtn">
+          <button class="close-riddle-text-btn" id="closeRiddleTextBtn" type="button">
             Step back into the shadows
           </button>
+          <!-- Text-based close button for mobile -->
         </div>
       </div>
     </div>
     <!-- End Riddle Overlay HTML -->
-
+ 
     <script type="module">
       import * as THREE from "https://esm.sh/three@0.160.0";
         import { Pane } from "https://cdn.skypack.dev/tweakpane@4.0.4";
@@ -1452,70 +1613,195 @@ They are guarded by the dragon, with seven shades in its head. Among the heads o
                 const closeRiddleTextBtn =
                   document.getElementById('closeRiddleTextBtn');
                 const riddleText = document.getElementById('riddleText');
-                const riddleAnswerInput = document.getElementById('riddleAnswer');
+                const riddleAnswerGroup = document.getElementById('riddleAnswerGroup');
+                const riddleAnswerBoxes = Array.from(document.querySelectorAll('.riddle-answer-box'));
                 const submitRiddleBtn = document.getElementById('submitRiddle');
                 const feedback = document.getElementById('feedback');
                 let currentRiddleAnswer = '';
+
+                const focusBox = (index) => {
+                  if (!riddleAnswerBoxes.length) return;
+                  const clampIndex = Math.max(0, Math.min(index, riddleAnswerBoxes.length - 1));
+                  const target = riddleAnswerBoxes[clampIndex];
+                  if (target) {
+                    target.focus();
+                    target.select();
+                    if (window.innerWidth <= 900 && typeof target.scrollIntoView === 'function') {
+                      target.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' });
+                    }
+                  }
+                };
+
+                const resetAnswerBoxes = () => {
+                  riddleAnswerBoxes.forEach((box) => {
+                    box.value = '';
+                    box.classList.remove('error');
+                  });
+                  if (riddleAnswerGroup) {
+                    riddleAnswerGroup.classList.remove('failure-shake');
+                  }
+                };
+
+                const joinAnswerBoxes = () =>
+                  riddleAnswerBoxes.map((box) => (box.value || '').trim()).join('');
+
+                const triggerShake = (element) => {
+                  if (!element) return;
+                  element.classList.remove('failure-shake');
+                  void element.offsetWidth;
+                  element.classList.add('failure-shake');
+                };
+
+                const triggerErrorState = (message) => {
+                  if (message) {
+                    feedback.textContent = message;
+                  }
+                  feedback.classList.add('failure');
+                  riddleAnswerBoxes.forEach((box) => box.classList.add('error'));
+                  triggerShake(feedback);
+                  triggerShake(riddleAnswerGroup);
+                  setTimeout(() => {
+                    riddleAnswerBoxes.forEach((box) => box.classList.remove('error'));
+                  }, 450);
+                };
 
                 const openRiddle = (riddle, answer) => {
                   currentRiddleAnswer = answer.toLowerCase(); // Ensure answer is lowercase for comparison
                   riddleOverlay.classList.add('active');
                   feedback.textContent = '';
-                  riddleAnswerInput.value = '';
+                  feedback.classList.remove('success', 'failure', 'failure-shake');
+                  resetAnswerBoxes();
 
-                  riddleText.innerHTML = '';
-                  const cleanRiddle = riddle.replace(/^"|"$/g, '');
+                  // riddleText.innerHTML = ''; // OLD
+                  // const cleanRiddle = riddle.replace(/^"|"$/g, ''); // OLD
 
-                  const contentSpan = document.createElement('span');
-                  contentSpan.innerHTML = cleanRiddle;
-                  riddleText.appendChild(contentSpan);
+                  // const contentSpan = document.createElement('span'); // OLD
+                  // contentSpan.innerHTML = cleanRiddle; // OLD
+                  // riddleText.appendChild(contentSpan); // OLD
+
+                  // NEW: Directly inject the HTML from the data-riddle attribute
+                  riddleText.innerHTML = riddle;
 
                   // GSAP Animation
                   gsap.fromTo(
-                    riddleText.children,
+                    riddleText.children, // This will now target the <p class='riddle-stanza'> tags
                     { opacity: 0, y: 10 },
-                    { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }
+                    {
+                      opacity: 1,
+                      y: 0,
+                      duration: 0.8,
+                      ease: 'power2.out',
+                      stagger: 0.2 // ADDED for a more elegant staggered reveal
+                    }
                   );
 
+                  document.body.classList.add('riddle-open'); // ADDED: Lock body scroll
                   if (lenis) lenis.stop();
+                  setTimeout(() => focusBox(0), 120);
                 };
 
                 // Re-assign the outer-scoped function
                 closeRiddle = () => {
                   riddleOverlay.classList.remove('active');
+                  document.body.classList.remove('riddle-open'); // ADDED: Unlock body scroll
                   if (lenis) lenis.start();
+                  resetAnswerBoxes();
+                  feedback.textContent = '';
+                  feedback.classList.remove('success', 'failure', 'failure-shake');
+                  riddleAnswerBoxes.forEach((box) => box.blur());
                 };
+
+                // ADDED: Click outside the content box to close
+                riddleOverlay.addEventListener('click', (e) => {
+                  if (e.target === riddleOverlay) {
+                    closeRiddle();
+                  }
+                });
 
                 // Add listeners to BOTH close buttons
                 closeRiddleIconBtn.addEventListener('click', closeRiddle);
                 closeRiddleTextBtn.addEventListener('click', closeRiddle);
 
+                riddleAnswerBoxes.forEach((box, index) => {
+                  box.addEventListener('input', (e) => {
+                    const digit = e.target.value.replace(/[^0-9]/g, '');
+                    e.target.value = digit.slice(-1);
+                    if (e.target.value && index < riddleAnswerBoxes.length - 1) {
+                      focusBox(index + 1);
+                    }
+                  });
+
+                  box.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !box.value && index > 0) {
+                      e.preventDefault();
+                      riddleAnswerBoxes[index - 1].value = '';
+                      focusBox(index - 1);
+                      return;
+                    }
+                    if (e.key === 'ArrowLeft' && index > 0) {
+                      e.preventDefault();
+                      focusBox(index - 1);
+                      return;
+                    }
+                    if (e.key === 'ArrowRight' && index < riddleAnswerBoxes.length - 1) {
+                      e.preventDefault();
+                      focusBox(index + 1);
+                    }
+                  });
+
+                  box.addEventListener('paste', (e) => {
+                    const pasted = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+                    const digits = pasted.replace(/[^0-9]/g, '').slice(0, riddleAnswerBoxes.length - index);
+                    if (!digits) return;
+                    e.preventDefault();
+                    digits.split('').forEach((digit, offset) => {
+                      const target = riddleAnswerBoxes[index + offset];
+                      if (target) target.value = digit;
+                    });
+                    const nextIndex = Math.min(index + digits.length, riddleAnswerBoxes.length - 1);
+                    focusBox(nextIndex);
+                  });
+
+                  box.addEventListener('focus', () => {
+                    box.select();
+                  });
+
+                  box.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                      submitRiddleBtn.click();
+                    }
+                  });
+                });
+
                 submitRiddleBtn.addEventListener('click', () => {
-                  const answer = riddleAnswerInput.value.trim().toLowerCase();
+                  const rawAnswer = joinAnswerBoxes();
+                  const normalizedAnswer = rawAnswer.toLowerCase();
                   feedback.classList.remove('success', 'failure', 'failure-shake');
-                  if (answer === currentRiddleAnswer) {
+
+                  if (rawAnswer.replace(/\s+/g, '').length < riddleAnswerBoxes.length) {
+                    triggerErrorState('Enter all four symbols to proceed.');
+                    const emptyIndex = riddleAnswerBoxes.findIndex((box) => !box.value);
+                    focusBox(emptyIndex === -1 ? riddleAnswerBoxes.length - 1 : emptyIndex);
+                    return;
+                  }
+
+                  if (normalizedAnswer === currentRiddleAnswer) {
                     feedback.textContent =
                       'You have seen through the veil. The artifact awaits you.';
                     feedback.classList.add('success');
+                    riddleAnswerBoxes.forEach((box) => box.classList.remove('error'));
+                    if (riddleAnswerGroup) {
+                      riddleAnswerGroup.classList.remove('failure-shake');
+                    }
                     setTimeout(() => {
                       closeRiddle();
-                      // Using a custom modal/alert is better, but alert is here as per original file
-                      // alert('Artifact Unlocked!');
-
-                      // You might want to replace this alert with a non-blocking notification
                       console.log("Artifact Unlocked!");
-
                     }, 1500);
                   } else {
-                    feedback.textContent =
-                      'Not yet. Look closer. The pattern hides in plain sight.';
-                    feedback.classList.add('failure');
-                    setTimeout(() => feedback.classList.add('failure-shake'), 10);
+                    triggerErrorState(
+                      'Not yet. Look closer. The pattern hides in plain sight.'
+                    );
                   }
-                });
-
-                riddleAnswerInput.addEventListener('keypress', (e) => {
-                  if (e.key === 'Enter') submitRiddleBtn.click();
                 });
                 // --- End Riddle JavaScript ---
 
